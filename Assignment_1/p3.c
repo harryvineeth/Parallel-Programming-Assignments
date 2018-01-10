@@ -1,21 +1,27 @@
 #include <omp.h>
 #include <stdio.h>
+
+int X[1 << 16], Y[1 << 16];
+
+void init_vectors()
+{
+	int j;
+	#pragma omp parallel for
+	for(j = 0; j < 1 << 16; j++)
+	{
+		X[j] = j;
+		Y[j] = 2 * j;
+	}	
+}
+
 int main()
 {
-	int X[1 << 16];
-	int Y[1 << 16];
-	float a = 0.7;
-	int i, j, thread;	
-	double start, end, t1;
-	for( int i = 0; i < 1 << 16; i++ )
+	int i, j, threads, a = 3;	
+	double start, end, time, t1;
+	for(i = 1 ; i <= 16 ; i++)
 	{
-		X[i] = i;
-		Y[i] = 2 * i;
-	}
-
-	for( i = 1 ; i <= 8 ; i++ )
-	{
-		omp_set_num_threads(i);	
+		omp_set_num_threads(i);		
+		init_vectors();	
 		start = omp_get_wtime();
 		#pragma omp parallel
 		{
@@ -23,15 +29,15 @@ int main()
 			threads = omp_get_num_threads();
 			
 			#pragma omp for
-			for( j = 0 ; j < (1 << 16) ; j++)
+			for(j = 0; j < 1 << 16; j++)
 				X[j] = a * X[j] + Y[j];
 			
 		}
 		end = omp_get_wtime();
-		double time = end - start;
-		if(thread == 1)
+		time = end - start;
+		if(threads == 1)
 			t1 = time;
-		printf("Time used for thread %d = %lf \nSpeedup for %d threads = %lf\n\n", threads, time, threads, t1 / time );
+		printf("Speedup for %d threads = %lf\n", threads, t1 / time );
 	}
 	return 0;
 }

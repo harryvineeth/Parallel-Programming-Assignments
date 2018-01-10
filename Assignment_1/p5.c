@@ -1,37 +1,27 @@
-#include "omp.h"
+#include <omp.h>
 #include <stdio.h>
-
-long double pi;
-long double calculate(long double x)
-{
-	return (4.0/(1.0 + x * x));
-}
+#define ITERATIONS 100000
 
 int main()
 {
-	double start = omp_get_wtime();
-	long long iterations = 100000;
-	long double step = 1.0/(double)iterations;
-	long long sum = 0;
-
+	double start, end, time, step = 1.0 / ITERATIONS, PI;
+	start = omp_get_wtime();
 	#pragma omp parallel
 	{
-		long double partial = 0;
-
-		int id = omp_get_thread_num();
-		int threads = omp_get_num_threads();
-
-		for (int i = id ; i < iterations ; i += threads )
+		double sum = 0;
+		int i, ID = omp_get_thread_num(), threads = omp_get_num_threads();
+		for (i = ID; i < ITERATIONS; i += threads)
 		{
-			partial += calculate((i + 0.5) * step);
-			
+			double x = (i + 0.5) * step;
+			sum += 4 / (1 + x * x);
 		}
 		#pragma omp atomic
-		sum = sum + partial;
+		PI = PI + sum;
 	}	
-	pi = sum * step;
-	printf("PI Value = %Lf\n",pi);
-	double end = omp_get_wtime();
-	double time = end - start;
-	printf("Time = %lf \n", time );
+	end = omp_get_wtime();
+	PI = PI * step;
+	time = end - start;
+	printf("PI Value = %lf\n", PI);
+	printf("Time = %lf\n", time );
+	return 0;
 }
