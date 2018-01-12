@@ -8,8 +8,10 @@ int func(int ID)
 
 int main()
 {
+	// Parallel section
 	#pragma omp parallel
 	{
+		// Get thread ID
 		int ID = omp_get_thread_num();
 		func(ID);
 	}

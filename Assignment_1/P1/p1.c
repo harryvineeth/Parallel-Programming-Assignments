@@ -2,6 +2,7 @@
 #include <stdio.h>
 int main()
 {
+	// Parallel section
 	#pragma omp parallel
 	{
 		printf("Hello World\n");

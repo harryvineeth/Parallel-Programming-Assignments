@@ -27,17 +27,27 @@ int dot_product(int x, int y)
 int main()
 {
 	int i, j, threads;
-	double start, end, time, t1;	
+	double start, end, time, t1;
+		
 	for(i = 1; i <= 16; i++)
 	{
+		// Ask for i threads
 		omp_set_num_threads(i);
+		
+		// Initialize matrices
 		init_matrices();
+
+		// Start timer
 		start = omp_get_wtime();
+
+		// Parallel section
 		#pragma omp parallel
 		{
+			// Master finds number of threads allocated
 			#pragma omp master
 			threads = omp_get_num_threads();
 
+			// Use worksharing to compute dot-products parallely
 			#pragma omp for
 			for(j = 0; j < N * N; j++)
 			{
@@ -45,7 +55,11 @@ int main()
 				ans[x][y] = dot_product(x, y);
 			}
 		}
+
+		// Stop timer
 		end = omp_get_wtime();
+		
+		// Print results
 		time = end - start;
 		if(threads == 1)
 			t1 = time;
