@@ -41,7 +41,6 @@ int main()
 			#pragma omp for
 			for(j = 0; j < 1 << 16; j++)
 				X[j] = a * X[j] + Y[j];
-			
 		}
 
 		// Stop timer
