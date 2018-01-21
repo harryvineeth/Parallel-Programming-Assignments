@@ -25,5 +25,6 @@ int main()
 			printf("Message from process %d : %s\n", status.MPI_SOURCE, message);
 		}
 	}
+	MPI_Finalize();
 	return 0;
 }
