@@ -12,7 +12,7 @@ int main()
 	if(ID != 0)
 	{
 		sprintf(message, "Hello from process %d", ID);
-		MPI_Send(message, strlen(message), MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+		MPI_Send(message, strlen(message) + 1, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
 	}
 	else
 	{

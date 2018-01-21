@@ -23,7 +23,10 @@ void compute_DAXPY(double X[], double Y[], int n)
 }
 
 int main()
-{
+{	
+
+
+	// Parallel Section
 	MPI_Init(NULL, NULL);
 	int ID, num_proc, size_per_process;
 	double *X, *Y, *sub_X, *sub_Y, start, end;
